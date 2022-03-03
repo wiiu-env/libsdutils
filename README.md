@@ -1,7 +1,7 @@
 [![Publish Docker Image](https://github.com/wiiu-env/libsdutils/actions/workflows/push_image.yml/badge.svg)](https://github.com/wiiu-env/libsdutils/actions/workflows/push_image.yml)
 
 # libsdutils
-Requires the [SDHotSwapModule](https://github.com/wiiu-env/SDHotSwapModule) to be running via [WUMSLoader](https://github.com/wiiu-env/WUMSLoader).
+Requires the [SDHotSwapModule](https://github.com/wiiu-env/SDHotSwapModule) to be running via [WUMSLoader](https://github.com/wiiu-env/WUMSLoader).  
 Requires [wut](https://github.com/devkitPro/wut) for building.
 Install via `make install`.
 
