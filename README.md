@@ -10,7 +10,7 @@ Make sure to define
 ```
 WUMS_ROOT := $(DEVKITPRO)/wums
 ```
-and add `-lkernel` to `LIBS` and `$(WUMS_ROOT)` to `LIBDIRS`.
+and add `-lsdutils` to `LIBS` and `$(WUMS_ROOT)` to `LIBDIRS`.
 
 After that you can simply include `<sdutils/sdutils.h>` to get access to the sdutils functions.
 
