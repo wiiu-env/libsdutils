@@ -10,6 +10,9 @@ static SDUtilsVersion (*sSDUtilsGetVersion)() = nullptr;
 static bool (*sSDUtilsAddAttachHandler)(SDAttachHandlerFn)    = nullptr;
 static bool (*sSDUtilsRemoveAttachHandler)(SDAttachHandlerFn) = nullptr;
 
+static bool (*sSDUtilsAddCleanUpHandlesHandler)(SDCleanUpHandlesHandlerFn)    = nullptr;
+static bool (*sSDUtilsRemoveCleanUpHandlesHandler)(SDCleanUpHandlesHandlerFn) = nullptr;
+
 SDUtilsStatus SDUtils_Init() {
     if (OSDynLoad_Acquire("homebrew_sdhotswap", &sModuleHandle) != OS_DYNLOAD_OK) {
         OSReport("SDUtils_Init: OSDynLoad_Acquire failed.\n");
@@ -35,6 +38,16 @@ SDUtilsStatus SDUtils_Init() {
         return SDUTILS_RESULT_MODULE_MISSING_EXPORT;
     }
 
+    if (OSDynLoad_FindExport(sModuleHandle, FALSE, "SDUtilsAddCleanUpHandlesHandler", (void **) &sSDUtilsAddCleanUpHandlesHandler) != OS_DYNLOAD_OK) {
+        OSReport("SDUtils_Init: SDUtilsAddCleanUpHandlesHandler failed.\n");
+        return SDUTILS_RESULT_MODULE_MISSING_EXPORT;
+    }
+
+    if (OSDynLoad_FindExport(sModuleHandle, FALSE, "SDUtilsRemoveCleanUpHandlesHandler", (void **) &sSDUtilsRemoveCleanUpHandlesHandler) != OS_DYNLOAD_OK) {
+        OSReport("SDUtils_Init: SDUtilsRemoveCleanUpHandlesHandler failed.\n");
+        return SDUTILS_RESULT_MODULE_MISSING_EXPORT;
+    }
+
     return SDUTILS_RESULT_SUCCESS;
 }
 
@@ -51,7 +64,6 @@ SDUtilsStatus SDUtils_DeInit() {
     // We don't need to release the OSDynLoad handle for modules.
     return SDUTILS_RESULT_SUCCESS;
 }
-
 
 SDUtilsStatus SDUtils_IsSdCardMounted(bool *status) {
     if (status == nullptr) {
@@ -77,7 +89,6 @@ SDUtilsStatus SDUtils_AddAttachHandler(SDAttachHandlerFn fn) {
     return res ? SDUTILS_RESULT_SUCCESS : SDUTILS_RESULT_MAX_CALLBACKS;
 }
 
-
 bool RemoveAttachHandler(SDAttachHandlerFn);
 
 SDUtilsStatus SDUtils_RemoveAttachHandler(SDAttachHandlerFn fn) {
@@ -85,5 +96,25 @@ SDUtilsStatus SDUtils_RemoveAttachHandler(SDAttachHandlerFn fn) {
         return SDUTILS_RESULT_LIB_UNINITIALIZED;
     }
     auto res = reinterpret_cast<decltype(&RemoveAttachHandler)>(sSDUtilsRemoveAttachHandler)(fn);
+    return res ? SDUTILS_RESULT_SUCCESS : SDUTILS_RESULT_NOT_FOUND;
+}
+
+bool AddCleanUpHandlesHandler(SDCleanUpHandlesHandlerFn);
+
+SDUtilsStatus SDUtils_AddCleanUpHandlesHandler(SDCleanUpHandlesHandlerFn fn) {
+    if (sSDUtilsAddCleanUpHandlesHandler == nullptr) {
+        return SDUTILS_RESULT_LIB_UNINITIALIZED;
+    }
+    auto res = reinterpret_cast<decltype(&AddCleanUpHandlesHandler)>(sSDUtilsAddCleanUpHandlesHandler)(fn);
+    return res ? SDUTILS_RESULT_SUCCESS : SDUTILS_RESULT_MAX_CALLBACKS;
+}
+
+bool RemoveCleanUpHandlesHandler(SDCleanUpHandlesHandlerFn);
+
+SDUtilsStatus SDUtils_RemoveCleanUpHandlesHandler(SDCleanUpHandlesHandlerFn fn) {
+    if (sSDUtilsRemoveCleanUpHandlesHandler == nullptr) {
+        return SDUTILS_RESULT_LIB_UNINITIALIZED;
+    }
+    auto res = reinterpret_cast<decltype(&RemoveCleanUpHandlesHandler)>(sSDUtilsRemoveCleanUpHandlesHandler)(fn);
     return res ? SDUTILS_RESULT_SUCCESS : SDUTILS_RESULT_NOT_FOUND;
 }
