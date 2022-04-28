@@ -28,6 +28,8 @@ enum SDUtilsAttachStatus {
 
 typedef void (*SDAttachHandlerFn)(SDUtilsAttachStatus status);
 
+typedef void (*SDCleanUpHandlesHandlerFn)();
+
 /**
  * Initializes the SDUtils library. This must be call before any other function can be called
  * @return SDUTILS_RESULT_SUCCESS on success, the functions of this lib can be used
@@ -61,7 +63,7 @@ SDUtilsStatus SDUtils_DeInit();
  * @return SDUTILS_RESULT_SUCCESS on success
  *         SDUTILS_RESULT_MAX_CALLBACKS when registering the callback has failed because the
  *                                      maximum amount of callback has been reached
- *         SDUTILS_RESULT_LIB_UNINITIALIZED if the lib was not initalized properly
+ *         SDUTILS_RESULT_LIB_UNINITIALIZED if the lib was not initialized properly
  */
 SDUtilsStatus SDUtils_AddAttachHandler(SDAttachHandlerFn fn);
 
@@ -71,9 +73,37 @@ SDUtilsStatus SDUtils_AddAttachHandler(SDAttachHandlerFn fn);
  * @param fn
  * @return SDUTILS_RESULT_SUCCESS on success
  *         SDUTILS_RESULT_NOT_FOUND when the given callback was not registered.
- *         SDUTILS_RESULT_LIB_UNINITIALIZED if the lib was not initalized properly
+ *         SDUTILS_RESULT_LIB_UNINITIALIZED if the lib was not initialized properly
  */
 SDUtilsStatus SDUtils_RemoveAttachHandler(SDAttachHandlerFn fn);
+
+/**
+ * Registers a callback which will be called whenever a sd card will be ejected and before
+ * the SDUtils_AddAttachHandler. This callback is supposed to be used to clean up any open
+ * file handles before the sd card gets unmounted.
+ * This is only true for future events, if the sd card is already ejected before registering
+ * a callback, the callback is only called on the next ejecting.
+ *
+ * Any previously registered callbacks will be removed when the currently running application
+ * is closing.
+ *
+ * @param fn callback that will be called
+ * @return SDUTILS_RESULT_SUCCESS on success
+ *         SDUTILS_RESULT_MAX_CALLBACKS when registering the callback has failed because the
+ *                                      maximum amount of callback has been reached
+ *         SDUTILS_RESULT_LIB_UNINITIALIZED if the lib was not initialized properly
+ */
+SDUtilsStatus SDUtils_AddCleanUpHandlesHandler(SDCleanUpHandlesHandlerFn fn);
+
+/**
+ * Removed a previously registered callback
+ *
+ * @param fn
+ * @return SDUTILS_RESULT_SUCCESS on success
+ *         SDUTILS_RESULT_NOT_FOUND when the given callback was not registered.
+ *         SDUTILS_RESULT_LIB_UNINITIALIZED if the lib was not initialized properly
+ */
+SDUtilsStatus SDUtils_RemoveCleanUpHandlesHandler(SDCleanUpHandlesHandlerFn fn);
 
 /**
  * Checks if a FAT32 formatted SD Card is inserted, mounted and available via `fs:/vol/external01`
