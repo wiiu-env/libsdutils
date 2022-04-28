@@ -5,6 +5,8 @@
 
 static OSDynLoad_Module sModuleHandle = nullptr;
 
+static SDUtilsVersion (*sSDUtilsGetVersion)() = nullptr;
+
 static bool (*sSDUtilsAddAttachHandler)(SDAttachHandlerFn)    = nullptr;
 static bool (*sSDUtilsRemoveAttachHandler)(SDAttachHandlerFn) = nullptr;
 
@@ -12,6 +14,15 @@ SDUtilsStatus SDUtils_Init() {
     if (OSDynLoad_Acquire("homebrew_sdhotswap", &sModuleHandle) != OS_DYNLOAD_OK) {
         OSReport("SDUtils_Init: OSDynLoad_Acquire failed.\n");
         return SDUTILS_RESULT_MODULE_NOT_FOUND;
+    }
+
+    if (OSDynLoad_FindExport(sModuleHandle, FALSE, "SDUtilsGetVersion", (void **) &sSDUtilsGetVersion) != OS_DYNLOAD_OK) {
+        OSReport("SDUtils_Init: SDUtilsGetVersion failed.\n");
+        return SDUTILS_RESULT_MODULE_MISSING_EXPORT;
+    }
+    auto res = SDUtils_GetVersion();
+    if (res != SDUTILS_MODULE_VERSION) {
+        return SDUTILS_RESULT_UNSUPPORTED_VERSION;
     }
 
     if (OSDynLoad_FindExport(sModuleHandle, FALSE, "SDUtilsAddAttachHandler", (void **) &sSDUtilsAddAttachHandler) != OS_DYNLOAD_OK) {
@@ -25,6 +36,15 @@ SDUtilsStatus SDUtils_Init() {
     }
 
     return SDUTILS_RESULT_SUCCESS;
+}
+
+SDUtilsVersion GetVersion();
+SDUtilsVersion SDUtils_GetVersion() {
+    if (sSDUtilsGetVersion == nullptr) {
+        return SDUTILS_RESULT_LIB_UNINITIALIZED;
+    }
+
+    return reinterpret_cast<decltype(&GetVersion)>(sSDUtilsGetVersion)();
 }
 
 SDUtilsStatus SDUtils_DeInit() {

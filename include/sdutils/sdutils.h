@@ -15,7 +15,11 @@ enum SDUtilsStatus {
     SDUTILS_RESULT_INVALID_ARGUMENT      = -5,
     SDUTILS_RESULT_FAILED                = -10,
     SDUTILS_RESULT_LIB_UNINITIALIZED     = -20,
+    SDUTILS_RESULT_UNSUPPORTED_VERSION   = -99,
 };
+
+typedef uint32_t SDUtilsVersion;
+#define SDUTILS_MODULE_VERSION 0x00000001
 
 enum SDUtilsAttachStatus {
     SDUTILS_ATTACH_MOUNTED   = 1,
@@ -31,6 +35,12 @@ typedef void (*SDAttachHandlerFn)(SDUtilsAttachStatus status);
  *         SDUTILS_RESULT_MODULE_MISSING_EXPORT when the SDHotSwapModule does not export the expected functions.
  */
 SDUtilsStatus SDUtils_Init();
+
+/**
+ * Returns the API Version of the WUHBUtils Module.
+ * @return The WUHBUtilsVersion of the Module
+ */
+SDUtilsVersion SDUtils_GetVersion();
 
 /**
  * Deinitializes the SDUtils library, must be called before exiting the application
