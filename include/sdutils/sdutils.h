@@ -36,7 +36,13 @@ typedef void (*SDCleanUpHandlesHandlerFn)();
  *         SDUTILS_RESULT_MODULE_NOT_FOUND when the SDHotSwapModule is not loaded
  *         SDUTILS_RESULT_MODULE_MISSING_EXPORT when the SDHotSwapModule does not export the expected functions.
  */
-SDUtilsStatus SDUtils_Init();
+SDUtilsStatus SDUtils_InitLibrary();
+
+/**
+ * Deinitializes the SDUtils library, must be called before exiting the application
+ * @return SDUTILS_RESULT_SUCCESS on success
+ */
+SDUtilsStatus SDUtils_DeInitLibrary();
 
 /**
  * Returns the API Version of the WUHBUtils Module.
@@ -44,11 +50,6 @@ SDUtilsStatus SDUtils_Init();
  */
 SDUtilsVersion SDUtils_GetVersion();
 
-/**
- * Deinitializes the SDUtils library, must be called before exiting the application
- * @return SDUTILS_RESULT_SUCCESS on success
- */
-SDUtilsStatus SDUtils_DeInit();
 
 /**
  * Registers a callback which will be called whenever a sd card will be inserted or ejected.
