@@ -13,7 +13,7 @@ static bool (*sSDUtilsRemoveAttachHandler)(SDAttachHandlerFn) = nullptr;
 static bool (*sSDUtilsAddCleanUpHandlesHandler)(SDCleanUpHandlesHandlerFn)    = nullptr;
 static bool (*sSDUtilsRemoveCleanUpHandlesHandler)(SDCleanUpHandlesHandlerFn) = nullptr;
 
-SDUtilsStatus SDUtils_Init() {
+SDUtilsStatus SDUtils_InitLibrary() {
     if (OSDynLoad_Acquire("homebrew_sdhotswap", &sModuleHandle) != OS_DYNLOAD_OK) {
         OSReport("SDUtils_Init: OSDynLoad_Acquire failed.\n");
         return SDUTILS_RESULT_MODULE_NOT_FOUND;
@@ -51,6 +51,11 @@ SDUtilsStatus SDUtils_Init() {
     return SDUTILS_RESULT_SUCCESS;
 }
 
+SDUtilsStatus SDUtils_DeInitLibrary() {
+    // We don't need to release the OSDynLoad handle for modules.
+    return SDUTILS_RESULT_SUCCESS;
+}
+
 SDUtilsVersion GetVersion();
 SDUtilsVersion SDUtils_GetVersion() {
     if (sSDUtilsGetVersion == nullptr) {
@@ -58,11 +63,6 @@ SDUtilsVersion SDUtils_GetVersion() {
     }
 
     return reinterpret_cast<decltype(&GetVersion)>(sSDUtilsGetVersion)();
-}
-
-SDUtilsStatus SDUtils_DeInit() {
-    // We don't need to release the OSDynLoad handle for modules.
-    return SDUTILS_RESULT_SUCCESS;
 }
 
 SDUtilsStatus SDUtils_IsSdCardMounted(bool *status) {
