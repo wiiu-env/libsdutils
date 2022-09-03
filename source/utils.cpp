@@ -1,3 +1,4 @@
+#include "logger.h"
 #include "sdutils/sdutils.h"
 #include <coreinit/debug.h>
 #include <coreinit/dynload.h>
@@ -17,12 +18,12 @@ static SDUtilsVersion sSDUtilsVersion = SD_UTILS_MODULE_VERSION_ERROR;
 
 SDUtilsStatus SDUtils_InitLibrary() {
     if (OSDynLoad_Acquire("homebrew_sdhotswap", &sModuleHandle) != OS_DYNLOAD_OK) {
-        OSReport("SDUtils_Init: OSDynLoad_Acquire failed.\n");
+        DEBUG_FUNCTION_LINE_ERR("SDUtils_Init: OSDynLoad_Acquire failed.");
         return SDUTILS_RESULT_MODULE_NOT_FOUND;
     }
 
     if (OSDynLoad_FindExport(sModuleHandle, FALSE, "SDUtilsGetVersion", (void **) &sSDUtilsGetVersion) != OS_DYNLOAD_OK) {
-        OSReport("SDUtils_Init: SDUtilsGetVersion failed.\n");
+        DEBUG_FUNCTION_LINE_ERR("SDUtils_Init: SDUtilsGetVersion failed.");
         return SDUTILS_RESULT_MODULE_MISSING_EXPORT;
     }
 
@@ -32,22 +33,22 @@ SDUtilsStatus SDUtils_InitLibrary() {
     }
 
     if (OSDynLoad_FindExport(sModuleHandle, FALSE, "SDUtilsAddAttachHandler", (void **) &sSDUtilsAddAttachHandler) != OS_DYNLOAD_OK) {
-        OSReport("SDUtils_Init: SDUtilsAddAttachHandler failed.\n");
+        DEBUG_FUNCTION_LINE_ERR("SDUtils_Init: SDUtilsAddAttachHandler failed.");
         return SDUTILS_RESULT_MODULE_MISSING_EXPORT;
     }
 
     if (OSDynLoad_FindExport(sModuleHandle, FALSE, "SDUtilsRemoveAttachHandler", (void **) &sSDUtilsRemoveAttachHandler) != OS_DYNLOAD_OK) {
-        OSReport("SDUtils_Init: SDUtilsRemoveAttachHandler failed.\n");
+        DEBUG_FUNCTION_LINE_ERR("SDUtils_Init: SDUtilsRemoveAttachHandler failed.");
         return SDUTILS_RESULT_MODULE_MISSING_EXPORT;
     }
 
     if (OSDynLoad_FindExport(sModuleHandle, FALSE, "SDUtilsAddCleanUpHandlesHandler", (void **) &sSDUtilsAddCleanUpHandlesHandler) != OS_DYNLOAD_OK) {
-        OSReport("SDUtils_Init: SDUtilsAddCleanUpHandlesHandler failed.\n");
+        DEBUG_FUNCTION_LINE_ERR("SDUtils_Init: SDUtilsAddCleanUpHandlesHandler failed.");
         return SDUTILS_RESULT_MODULE_MISSING_EXPORT;
     }
 
     if (OSDynLoad_FindExport(sModuleHandle, FALSE, "SDUtilsRemoveCleanUpHandlesHandler", (void **) &sSDUtilsRemoveCleanUpHandlesHandler) != OS_DYNLOAD_OK) {
-        OSReport("SDUtils_Init: SDUtilsRemoveCleanUpHandlesHandler failed.\n");
+        DEBUG_FUNCTION_LINE_ERR("SDUtils_Init: SDUtilsRemoveCleanUpHandlesHandler failed.");
         return SDUTILS_RESULT_MODULE_MISSING_EXPORT;
     }
 
