@@ -5,13 +5,15 @@
 
 static OSDynLoad_Module sModuleHandle = nullptr;
 
-static SDUtilsVersion (*sSDUtilsGetVersion)() = nullptr;
+static SDUtilsStatus (*sSDUtilsGetVersion)(SDUtilsVersion *) = nullptr;
 
 static bool (*sSDUtilsAddAttachHandler)(SDAttachHandlerFn)    = nullptr;
 static bool (*sSDUtilsRemoveAttachHandler)(SDAttachHandlerFn) = nullptr;
 
 static bool (*sSDUtilsAddCleanUpHandlesHandler)(SDCleanUpHandlesHandlerFn)    = nullptr;
 static bool (*sSDUtilsRemoveCleanUpHandlesHandler)(SDCleanUpHandlesHandlerFn) = nullptr;
+
+static SDUtilsVersion sSDUtilsVersion = SD_UTILS_MODULE_VERSION_ERROR;
 
 SDUtilsStatus SDUtils_InitLibrary() {
     if (OSDynLoad_Acquire("homebrew_sdhotswap", &sModuleHandle) != OS_DYNLOAD_OK) {
@@ -23,8 +25,9 @@ SDUtilsStatus SDUtils_InitLibrary() {
         OSReport("SDUtils_Init: SDUtilsGetVersion failed.\n");
         return SDUTILS_RESULT_MODULE_MISSING_EXPORT;
     }
-    auto res = SDUtils_GetVersion();
-    if (res != SDUTILS_MODULE_VERSION) {
+
+    auto res = SDUtils_GetVersion(&sSDUtilsVersion);
+    if (res != SDUTILS_RESULT_SUCCESS) {
         return SDUTILS_RESULT_UNSUPPORTED_VERSION;
     }
 
@@ -56,13 +59,12 @@ SDUtilsStatus SDUtils_DeInitLibrary() {
     return SDUTILS_RESULT_SUCCESS;
 }
 
-SDUtilsVersion GetVersion();
-SDUtilsVersion SDUtils_GetVersion() {
-    if (sSDUtilsGetVersion == nullptr) {
-        return SDUTILS_RESULT_LIB_UNINITIALIZED;
+SDUtilsStatus GetVersion(SDUtilsVersion *);
+SDUtilsStatus SDUtils_GetVersion(SDUtilsVersion *version) {
+    if (version == nullptr) {
+        return SDUTILS_RESULT_INVALID_ARGUMENT;
     }
-
-    return reinterpret_cast<decltype(&GetVersion)>(sSDUtilsGetVersion)();
+    return reinterpret_cast<decltype(&GetVersion)>(sSDUtilsGetVersion)(version);
 }
 
 SDUtilsStatus SDUtils_IsSdCardMounted(bool *status) {

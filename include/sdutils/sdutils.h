@@ -19,7 +19,7 @@ enum SDUtilsStatus {
 };
 
 typedef uint32_t SDUtilsVersion;
-#define SDUTILS_MODULE_VERSION 0x00000001
+#define SD_UTILS_MODULE_VERSION_ERROR 0xFFFFFFFF
 
 enum SDUtilsAttachStatus {
     SDUTILS_ATTACH_MOUNTED   = 1,
@@ -45,11 +45,17 @@ SDUtilsStatus SDUtils_InitLibrary();
 SDUtilsStatus SDUtils_DeInitLibrary();
 
 /**
- * Returns the API Version of the WUHBUtils Module.
- * @return The WUHBUtilsVersion of the Module
+ * Retrieves the API Version of the loaded SDUtils.<br>
+ * <br>
+ * @param outVersion pointer to the variable where the version will be stored.
+ *
+ * @return SDUTILS_RESULT_SUCCESS:               The API version has been store in the version ptr.<br>
+ *         SDUTILS_RESULT_MODULE_NOT_FOUND:      The module could not be found. Make sure the module is loaded.<br>
+ *         SDUTILS_RESULT_MODULE_MISSING_EXPORT: The module is missing an expected export.<br>
+ *         SDUTILS_RESULT_INVALID_ARGUMENT:      Invalid version pointer.<br>
+ *         SDUTILS_RESULT_UNKNOWN_ERROR:         Retrieving the module version failed.
  */
-SDUtilsVersion SDUtils_GetVersion();
-
+SDUtilsStatus SDUtils_GetVersion(SDUtilsVersion *outVersion);
 
 /**
  * Registers a callback which will be called whenever a sd card will be inserted or ejected.
