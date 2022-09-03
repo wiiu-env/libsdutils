@@ -6,25 +6,26 @@ extern "C" {
 
 #include <stdint.h>
 
-enum SDUtilsStatus {
+typedef enum SDUtilsStatus {
     SDUTILS_RESULT_SUCCESS               = 0,
-    SDUTILS_RESULT_MODULE_NOT_FOUND      = -1,
-    SDUTILS_RESULT_MODULE_MISSING_EXPORT = -2,
-    SDUTILS_RESULT_MAX_CALLBACKS         = -3,
-    SDUTILS_RESULT_NOT_FOUND             = -4,
-    SDUTILS_RESULT_INVALID_ARGUMENT      = -5,
-    SDUTILS_RESULT_FAILED                = -10,
-    SDUTILS_RESULT_LIB_UNINITIALIZED     = -20,
-    SDUTILS_RESULT_UNSUPPORTED_VERSION   = -99,
-};
+    SDUTILS_RESULT_MODULE_NOT_FOUND      = -0x1,
+    SDUTILS_RESULT_MODULE_MISSING_EXPORT = -0x2,
+    SDUTILS_RESULT_MAX_CALLBACKS         = -0x3,
+    SDUTILS_RESULT_NOT_FOUND             = -0x4,
+    SDUTILS_RESULT_INVALID_ARGUMENT      = -0x5,
+    SDUTILS_RESULT_FAILED                = -0x10,
+    SDUTILS_RESULT_LIB_UNINITIALIZED     = -0x20,
+    SDUTILS_RESULT_UNSUPPORTED_VERSION   = -0x99,
+    SDUTILS_RESULT_UNKNOWN_ERROR         = -0x1000,
+} SDUtilsStatus;
 
 typedef uint32_t SDUtilsVersion;
 #define SD_UTILS_MODULE_VERSION_ERROR 0xFFFFFFFF
 
-enum SDUtilsAttachStatus {
+typedef enum SDUtilsAttachStatus {
     SDUTILS_ATTACH_MOUNTED   = 1,
     SDUTILS_ATTACH_UNMOUNTED = 0,
-};
+} SDUtilsAttachStatus;
 
 typedef void (*SDAttachHandlerFn)(SDUtilsAttachStatus status);
 
