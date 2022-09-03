@@ -32,6 +32,8 @@ typedef void (*SDAttachHandlerFn)(SDUtilsAttachStatus status);
 
 typedef void (*SDCleanUpHandlesHandlerFn)();
 
+const char *SDUtils_GetStatusStr(SDUtilsStatus status);
+
 /**
  * Initializes the SDUtils library. This must be call before any other function can be called
  * @return SDUTILS_RESULT_SUCCESS on success, the functions of this lib can be used <br>

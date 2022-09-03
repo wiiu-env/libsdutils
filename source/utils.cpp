@@ -14,6 +14,34 @@ static bool (*sSDUtilsRemoveAttachHandler)(SDAttachHandlerFn) = nullptr;
 static bool (*sSDUtilsAddCleanUpHandlesHandler)(SDCleanUpHandlesHandlerFn)    = nullptr;
 static bool (*sSDUtilsRemoveCleanUpHandlesHandler)(SDCleanUpHandlesHandlerFn) = nullptr;
 
+const char *SDUtils_GetStatusStr(SDUtilsStatus status) {
+    switch (status) {
+        case SDUTILS_RESULT_SUCCESS:
+            return "SDUTILS_RESULT_SUCCESS";
+        case SDUTILS_RESULT_MODULE_NOT_FOUND:
+            return "SDUTILS_RESULT_MODULE_NOT_FOUND";
+        case SDUTILS_RESULT_MODULE_MISSING_EXPORT:
+            return "SDUTILS_RESULT_MODULE_MISSING_EXPORT";
+        case SDUTILS_RESULT_MAX_CALLBACKS:
+            return "SDUTILS_RESULT_MAX_CALLBACKS";
+        case SDUTILS_RESULT_NOT_FOUND:
+            return "SDUTILS_RESULT_NOT_FOUND";
+        case SDUTILS_RESULT_INVALID_ARGUMENT:
+            return "SDUTILS_RESULT_INVALID_ARGUMENT";
+        case SDUTILS_RESULT_FAILED:
+            return "SDUTILS_RESULT_FAILED";
+        case SDUTILS_RESULT_LIB_UNINITIALIZED:
+            return "SDUTILS_RESULT_LIB_UNINITIALIZED";
+        case SDUTILS_RESULT_UNSUPPORTED_VERSION:
+            return "SDUTILS_RESULT_UNSUPPORTED_VERSION";
+        case SDUTILS_RESULT_UNSUPPORTED_COMMAND:
+            return "SDUTILS_RESULT_UNSUPPORTED_COMMAND";
+        case SDUTILS_RESULT_UNKNOWN_ERROR:
+            return "SDUTILS_RESULT_UNKNOWN_ERROR";
+    }
+    return "SDUTILS_RESULT_UNKNOWN_ERROR";
+}
+
 static SDUtilsVersion sSDUtilsVersion = SD_UTILS_MODULE_VERSION_ERROR;
 
 SDUtilsStatus SDUtils_InitLibrary() {
