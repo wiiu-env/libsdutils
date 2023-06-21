@@ -50,7 +50,7 @@ SDUtilsStatus SDUtils_InitLibrary() {
         return SDUTILS_RESULT_MODULE_NOT_FOUND;
     }
 
-    if (OSDynLoad_FindExport(sModuleHandle, FALSE, "SDUtilsGetVersion", (void **) &sSDUtilsGetVersion) != OS_DYNLOAD_OK) {
+    if (OSDynLoad_FindExport(sModuleHandle, OS_DYNLOAD_EXPORT_FUNC, "SDUtilsGetVersion", (void **) &sSDUtilsGetVersion) != OS_DYNLOAD_OK) {
         DEBUG_FUNCTION_LINE_ERR("FindExport SDUtilsGetVersion failed.");
         return SDUTILS_RESULT_MODULE_MISSING_EXPORT;
     }
@@ -60,22 +60,22 @@ SDUtilsStatus SDUtils_InitLibrary() {
         return SDUTILS_RESULT_UNSUPPORTED_VERSION;
     }
 
-    if (OSDynLoad_FindExport(sModuleHandle, FALSE, "SDUtilsAddAttachHandler", (void **) &sSDUtilsAddAttachHandler) != OS_DYNLOAD_OK) {
+    if (OSDynLoad_FindExport(sModuleHandle, OS_DYNLOAD_EXPORT_FUNC, "SDUtilsAddAttachHandler", (void **) &sSDUtilsAddAttachHandler) != OS_DYNLOAD_OK) {
         DEBUG_FUNCTION_LINE_ERR("FindExport SDUtilsAddAttachHandler failed.");
         sSDUtilsAddAttachHandler = nullptr;
     }
 
-    if (OSDynLoad_FindExport(sModuleHandle, FALSE, "SDUtilsRemoveAttachHandler", (void **) &sSDUtilsRemoveAttachHandler) != OS_DYNLOAD_OK) {
+    if (OSDynLoad_FindExport(sModuleHandle, OS_DYNLOAD_EXPORT_FUNC, "SDUtilsRemoveAttachHandler", (void **) &sSDUtilsRemoveAttachHandler) != OS_DYNLOAD_OK) {
         DEBUG_FUNCTION_LINE_ERR("FindExport SDUtilsRemoveAttachHandler failed.");
         sSDUtilsRemoveAttachHandler = nullptr;
     }
 
-    if (OSDynLoad_FindExport(sModuleHandle, FALSE, "SDUtilsAddCleanUpHandlesHandler", (void **) &sSDUtilsAddCleanUpHandlesHandler) != OS_DYNLOAD_OK) {
+    if (OSDynLoad_FindExport(sModuleHandle, OS_DYNLOAD_EXPORT_FUNC, "SDUtilsAddCleanUpHandlesHandler", (void **) &sSDUtilsAddCleanUpHandlesHandler) != OS_DYNLOAD_OK) {
         DEBUG_FUNCTION_LINE_ERR("FindExport SDUtilsAddCleanUpHandlesHandler failed.");
         sSDUtilsAddCleanUpHandlesHandler = nullptr;
     }
 
-    if (OSDynLoad_FindExport(sModuleHandle, FALSE, "SDUtilsRemoveCleanUpHandlesHandler", (void **) &sSDUtilsRemoveCleanUpHandlesHandler) != OS_DYNLOAD_OK) {
+    if (OSDynLoad_FindExport(sModuleHandle, OS_DYNLOAD_EXPORT_FUNC, "SDUtilsRemoveCleanUpHandlesHandler", (void **) &sSDUtilsRemoveCleanUpHandlesHandler) != OS_DYNLOAD_OK) {
         DEBUG_FUNCTION_LINE_ERR("FindExport SDUtilsRemoveCleanUpHandlesHandler failed.");
         sSDUtilsRemoveCleanUpHandlesHandler = nullptr;
     }
@@ -96,7 +96,7 @@ SDUtilsStatus SDUtils_GetVersion(SDUtilsVersion *outVersion) {
             return SDUTILS_RESULT_MODULE_NOT_FOUND;
         }
 
-        if (OSDynLoad_FindExport(sModuleHandle, FALSE, "SDUtilsGetVersion", (void **) &sSDUtilsGetVersion) != OS_DYNLOAD_OK) {
+        if (OSDynLoad_FindExport(sModuleHandle, OS_DYNLOAD_EXPORT_FUNC, "SDUtilsGetVersion", (void **) &sSDUtilsGetVersion) != OS_DYNLOAD_OK) {
             DEBUG_FUNCTION_LINE_WARN("FindExport SDUtilsGetVersion failed.");
             return SDUTILS_RESULT_MODULE_MISSING_EXPORT;
         }
